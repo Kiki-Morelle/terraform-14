@@ -1,21 +1,14 @@
-data "aws_route53_zone" "selected" {
-  name         = "bandenkop.store"
-  private_zone = false
-}
-
-
-# Lookup the existing Route53 hosted zone for your domain
-data "aws_route53_zone" "primary" {
-  name         = "bandenkop.store"
-  private_zone = false
-}
-# Lookup the existing wildcard ACM certificate in us-east-1
 data "aws_acm_certificate" "wildcard" {
-domain = "*.bandenkop.store"
+domain = var.cert_domain
 statuses = ["ISSUED"]
 most_recent = true
 }
-# Generate an IAM policy document granting S3 access to CloudFront OAC
+
+data "aws_route53_zone" "primary" {
+  name         = var.hosted_zone_name
+  private_zone = false
+}
+
 data "aws_iam_policy_document" "s3_oac_policy" {
 # Create an access statement inside the policy document
 statement {
